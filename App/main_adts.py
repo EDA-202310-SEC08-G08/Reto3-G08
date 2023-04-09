@@ -26,6 +26,7 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import stack as st
 from DISClib.ADT import queue as qu
 from DISClib.ADT import map as mp
+from DISClib.ADT import orderedmap as om
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import insertionsort as ins
@@ -628,3 +629,113 @@ class HashMap():
         valueSet = mp.valueSet(self.map)
 
         return List(adt=valueSet)
+
+class OrderedMap:
+
+    def __init__(self, omaptype = "RBT", comparefunction=None):
+        self.map = om.newMap(omaptype, comparefunction)
+        self.omaptype = omaptype
+        self.comparefunction = comparefunction
+
+    def __str__(self) -> str:
+
+        list =  List(adt=(om.keySet(self.map)))
+
+        return list.__str__()
+
+    def __len__(self) -> int:
+
+        return om.size(self.map)
+
+    def type(self) -> str:
+
+        return f"ADT : ordered map , Datastructure: {self.omaptype}"
+
+    def put(self, key, value):
+
+        om.put(self.map, key, value)
+
+    def get(self, key):
+
+        return om.get(self.map, key)
+
+    def remove(self, key):
+
+        return om.remove(self.map, key)
+
+    def contains(self, key):
+        """
+        Returns True if the key is in the map, False otherwise.
+
+        Parameters:
+        key (str): The key to search for in the map.
+
+        Returns:
+        bool: True if the key is in the map, False otherwise.
+        """
+        return om.contains(self.map, key)
+
+    def size(self) -> int:
+
+        return om.size(self.map)
+
+    def isEmpty(self) -> bool:
+
+        return om.isEmpty(self.map)
+
+    def keySet(self):
+
+        keySet = om.keySet(self.map)
+
+        return List(adt=keySet)
+
+    def valueSet(self):
+
+        valueSet = om.valueSet(self.map)
+
+        return List(adt=valueSet)
+
+    def minKey(self):
+
+        return om.minKey(self.map)
+
+    def maxKey(self):
+
+        return om.maxKey(self.map)
+
+    def deleteMin(self):
+
+        return om.deleteMin(self.map)
+
+    def deleteMax(self):
+
+        return om.deleteMax(self.map)
+
+    def floor(self, key):
+
+        return om.floor(self.map, key)
+
+    def ceiling(self, key):
+
+        return om.ceiling(self.map, key)
+
+    def select(self, k):
+
+        return om.select(self.map, k)
+    def rank(self, key):
+
+        return om.rank(self.map, key)
+    def height(self):
+
+        return om.height(self.map)
+    def keys(self, key1, key2):
+
+        return om.keys(self.map, key1, key2)
+    def values(self, key1, key2):
+
+        return om.values(self.map, key1, key2)
+
+
+
+
+
