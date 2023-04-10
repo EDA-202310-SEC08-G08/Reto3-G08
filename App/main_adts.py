@@ -472,101 +472,227 @@ class List:
         return pos
 
 class Stack:
-    
-    def __init__(self, datastructure = "DOUBLE_LINKED") -> object:
+    def __init__(self, datastructure="DOUBLE_LINKED") -> object:
+        """
+        Initializes a new stack instance, with an internal storage data structure of the specified type.
 
+        Args:
+        datastructure (str): The type of data structure to use for internal storage. Default is "DOUBLE_LINKED"
+            (a doubly-linked list data structure).
+        """
         self.stack = st.newStack(datastructure)
         self.datastructure = datastructure
     
-
     def __str__(self) -> str:
+        """
+        Returns a string representation of the elements in the stack.
+
+        Returns:
+        str: A string representation of the elements in the stack.
+        """
         if self.datastructure == "ARRAY_LIST":
             return str(self.stack["elements"])
         else:
             return str(self.stack["first"])
 
     def __len__(self) -> int:
+        """
+        Returns the number of elements in the stack.
 
+        Returns:
+        int: The number of elements in the stack.
+        """
         return st.size(self.stack)
 
     def __type__(self) -> str:
+        """
+        Returns a string representation of the stack's abstract data type (ADT) and internal storage data structure.
 
+        Returns:
+        str: A string representation of the stack's ADT and internal storage data structure.
+        """
         return f"ADT : stack , Datastructure: {self.datastructure}"
 
     def elements(self) -> str:
+        """
+        Returns a string representation of the elements in the stack.
+
+        Returns:
+        str: A string representation of the elements in the stack.
+        """
         if self.datastructure == "ARRAY_LIST":
             return str(self.stack["elements"])
         else:
             return str(self.stack["first"])
 
     def push(self, element):
+        """
+        Adds an element to the top of the stack.
 
+        Args:
+        element: The element to add to the stack.
+        """
         st.push(self.stack, element)
 
     def pop(self):
+        """
+        Removes and returns the element at the top of the stack.
 
+        Returns:
+        The element at the top of the stack.
+        """
         return st.pop(self.stack)
 
     def isEmpty(self) -> bool:
+        """
+        Returns a boolean indicating whether the stack is empty or not.
 
+        Returns:
+        bool: True if the stack is empty, False otherwise.
+        """
         return st.isEmpty(self.stack)
 
     def top(self):
+        """
+        Returns the element at the top of the stack without removing it.
 
+        Returns:
+        The element at the top of the stack.
+        """
         return st.top(self.stack)
 
     def size(self) -> int:
+        """
+        Returns the number of elements in the stack.
 
+        Returns:
+        int: The number of elements in the stack.
+        """
         return st.size(self.stack)
+
 
 class Queue:
 
     def __init__(self, datastructure)-> object:
+        """
+        Initializes a new queue instance, with an internal storage data structure of the specified type.
 
+        Args:
+        datastructure (str): The type of data structure to use for internal storage.
+            (e.g. "ARRAY_LIST" for an array list data structure, "DOUBLE_LINKED" for a doubly-linked list data structure)
+        """
         self.queue = qu.newQueue(datastructure)
         self.datastructure = datastructure
-        
 
     def __str__(self) -> str:
+        """
+        Returns a string representation of the elements in the queue.
+
+        Returns:
+        str: A string representation of the elements in the queue.
+        """
         if self.datastructure == "ARRAY_LIST":
             return str(self.queue["elements"])
         else:
             return str(self.queue["first"])
-    def __len__(self) -> int:
 
+    def __len__(self) -> int:
+        """
+        Returns the number of elements in the queue.
+
+        Returns:
+        int: The number of elements in the queue.
+        """
         return qu.size(self.queue)
 
     def __type__(self) -> str:
+        """
+        Returns a string representation of the queue's abstract data type (ADT) and internal storage data structure.
 
+        Returns:
+        str: A string representation of the queue's ADT and internal storage data structure.
+        """
         return f"ADT : queue , Datastructure: {self.datastructure}"
 
     def elements(self) -> str:
+        """
+        Returns a string representation of the elements in the queue.
+
+        Returns:
+        str: A string representation of the elements in the queue.
+        """
         if self.datastructure == "ARRAY_LIST":
             return str(self.queue["elements"])
         else:
             return str(self.queue["first"])
-    def enqueue(self, element):
 
+    def enqueue(self, element):
+        """
+        Adds an element to the back of the queue.
+
+        Args:
+        element: The element to add to the back of the queue.
+        """
         qu.enqueue(self.queue, element)
 
     def dequeue(self):
+        """
+        Removes and returns the element at the front of the queue.
 
+        Returns:
+        The element at the front of the queue.
+        """
         return qu.dequeue(self.queue)
-    def peek(self):
 
+    def peek(self):
+        """
+        Returns the element at the front of the queue without removing it.
+
+        Returns:
+        The element at the front of the queue.
+        """
         return qu.peek(self.queue)
 
     def isEmpty(self) -> bool:
+        """
+        Returns a boolean indicating whether the queue is empty or not.
 
+        Returns:
+        bool: True if the queue is empty, False otherwise.
+        """
         return qu.isEmpty(self.queue)
-    def size(self) -> int:
 
+    def size(self) -> int:
+        """
+        Returns the number of elements in the queue.
+
+        Returns:
+        int: The number of elements in the queue.
+        """
         return qu.size(self.queue)
 
-class HashMap():
+
+class HashMap:
 
     def __init__(self, numelements=17, maptype = "CHAINING", loadfactor = 4.0, cmpfunction = None):
+        """
+        Initializes the HashMap object, creating the map with the specified parameters.
 
+        Args:
+        numelements (int): number of elements in the map. Default is 17.
+        maptype (str): the type of map to create, either 'CHAINING' (default) or 'LP'.
+        loadfactor (float): the maximum load factor (elements/size) allowed. Default is 4.0.
+        cmpfunction : a function used for comparing keys. None by default.
+
+        Returns:
+        None
+
+        Attributes:
+        map: the map data structure instance
+        maptype: the type of map created
+        loadfactor: the maximum load factor allowed
+        cmpfunction: the function used for comparing keys
+        """
         self.map = mp.newMap(numelements=numelements, maptype=maptype, loadfactor=loadfactor, cmpfunction=cmpfunction)
         self.maptype = maptype
         self.loadfactor = loadfactor
@@ -574,26 +700,56 @@ class HashMap():
         
 
     def __str__(self) -> str:
-
+        """
+        Returns a string representation of the keys in the map.
+        """
         return str(mp.keySet(self.map))
 
     def __len__(self) -> int:
-
+        """
+        Returns the number of entries in the map.
+        """
         return mp.size(self.map)
 
     def type(self) -> str:
+        """
+        Returns a string representation of the ADT and datastructure.
 
+        Returns:
+        str: The string representation.
+        """
         return f"ADT : map , Datastructure: {self.maptype}"
 
     def put(self, key, value):
+        """
+        Puts a key-value pair into the map.
 
+        Parameters:
+        key (str): The key to add to the map.
+        value (object): The value associated with the key.
+
+        """
         mp.put(self.map, key, value)
 
     def get(self, key):
+        """
+        Gets the value associated with the given key.
 
+        Parameters:
+        key (str): The key to search for in the map.
+
+        Returns:
+        object: The value associated with the key.
+        """
         return mp.get(self.map, key)
 
     def remove(self, key):
+        """
+        Removes the key-value pair with the given key from the map.
+
+        :param key: key of the pair to be removed
+        :return: True if pair was removed successfully, False if the given key did not exist in the map
+        """
 
         return mp.remove(self.map, key)
 
@@ -611,129 +767,321 @@ class HashMap():
 
 
     def isEmpty(self) -> bool:
+        """
+        Checks if the map object is empty.
 
+        Returns:
+        - bool: True if the map is empty, else it returns False.
+        """
         return mp.isEmpty(self.map)
 
-    def size(self) -> int:
 
+    def size(self) -> int:
+        """
+        Returns the size of the map object.
+
+        Returns:
+        - int: the size of the map object.
+        """
         return mp.size(self.map)
 
+
     def keySet(self):
+        """
+        Gets a set of keys from the map object and returns it as a List object.
 
+        Returns:
+        - List: A List object that contains a set of keys of the map object.
+        """
         keySet = mp.keySet(self.map)
-
         return List(adt=keySet)
 
+
     def valueSet(self):
+        """
+        Gets a collection of values from the map object and returns it as a List object.
 
+        Returns:
+        - List: A List object that contains a collection of values of the map object.
+        """
         valueSet = mp.valueSet(self.map)
-
         return List(adt=valueSet)
 
 class OrderedMap:
+    """
+    This class provides methods for working with ordered map data structures.
 
-    def __init__(self, omaptype = "RBT", comparefunction=None):
+    Attributes:
+    - omaptype (str): a string that represents the ordered map data structure used.
+    - comparefunction (function): a user-defined function that can be used to compare keys.
+    - map (OrderedMap): an OrderedMap object that represents the ordered map data structure.
+    """
+
+    def __init__(self, omaptype="RBT", comparefunction=None):
+        """
+        Initializes a new instance of the OrderedMap class.
+
+        Args:
+        - omaptype (str): a string that represents the ordered map data structure used.
+        - comparefunction (function): a user-defined function that can be used to compare keys.
+        """
         self.map = om.newMap(omaptype, comparefunction)
         self.omaptype = omaptype
         self.comparefunction = comparefunction
 
+
     def __str__(self) -> str:
+        """
+        Returns a string with a list of the keys in the ordered map.
 
-        list =  List(adt=(om.keySet(self.map)))
+        Returns:
+        str: A string with a list of keys in the ordered map.
+        """
+        keys = om.keySet(self.map)
+        keyList = List(adt=keys)
+        return keyList.__str__()
 
-        return list.__str__()
 
     def __len__(self) -> int:
+        """
+        Returns the number of elements in the ordered map.
 
+        Returns:
+        int: The number of elements in the ordered map.
+        """
         return om.size(self.map)
 
-    def type(self) -> str:
 
+    def type(self) -> str:
+        """
+        Returns a string with the type of ordered map data structure used.
+
+        Returns:
+        str: A string with the type of ordered map data structure used.
+        """
         return f"ADT : ordered map , Datastructure: {self.omaptype}"
 
-    def put(self, key, value):
 
+    def put(self, key, value):
+        """
+        Inserts a key-value pair into the ordered map.
+
+        Parameters:
+        - key (str): The key to be inserted.
+        - value: The value associated with the key to be inserted.
+        """
         om.put(self.map, key, value)
 
-    def get(self, key):
 
+    def get(self, key):
+        """
+        Gets the value associated with a key in the ordered map.
+
+        Parameters:
+        - key (str): The key to search for in the ordered map.
+
+        Returns:
+        Any: The value associated with the key searched, or None if the key does not exist.
+        """
         return om.get(self.map, key)
 
-    def remove(self, key):
 
+    def remove(self, key):
+        """
+        Removes a key-value pair from the ordered map.
+
+        Parameters:
+        - key (str): The key to be removed.
+
+        Returns:
+        Any: The value associated with the key removed, or None if the key does not exist.
+        """
         return om.remove(self.map, key)
+
 
     def contains(self, key):
         """
-        Returns True if the key is in the map, False otherwise.
+        Checks if a given key exists in the ordered map.
 
         Parameters:
-        key (str): The key to search for in the map.
+        - key (str): The key to search for in the ordered map.
 
         Returns:
-        bool: True if the key is in the map, False otherwise.
+        bool: True if the key exists in the map, False otherwise.
         """
         return om.contains(self.map, key)
 
-    def size(self) -> int:
 
+    def size(self) -> int:
+        """
+        Returns the number of elements in the ordered map.
+
+        Returns:
+        int: The number of elements in the ordered map.
+        """
         return om.size(self.map)
 
+
     def isEmpty(self) -> bool:
+        """
+        Checks if the ordered map is empty.
 
+        Returns:
+        bool: True if the map is empty, else False.
+        """
         return om.isEmpty(self.map)
-
     def keySet(self):
+        """
+        Returns a list of all keys in the map.
 
+        Returns:
+        List: A list of all keys in the map.
+
+        """
         keySet = om.keySet(self.map)
-
         return List(adt=keySet)
 
     def valueSet(self):
+        """
+        Returns a list of all values in the map.
 
+        Returns:
+        List: A list of all values in the map.
+
+        """
         valueSet = om.valueSet(self.map)
-
         return List(adt=valueSet)
 
     def minKey(self):
+        """
+        Returns the smallest key in the map.
 
+        Returns:
+        The smallest key in the map.
+
+        """
         return om.minKey(self.map)
 
     def maxKey(self):
+        """
+        Returns the largest key in the map.
 
+        Returns:
+        The largest key in the map.
+
+        """
         return om.maxKey(self.map)
 
     def deleteMin(self):
+        """
+        Deletes the entry with the smallest key in the map.
 
+        Returns:
+        The deleted entry.
+
+        """
         return om.deleteMin(self.map)
 
     def deleteMax(self):
+        """
+        Deletes the entry with the largest key in the map.
 
+        Returns:
+        The deleted entry.
+
+        """
         return om.deleteMax(self.map)
 
     def floor(self, key):
+        """
+        Returns the largest key in the map less than or equal to the given key.
 
+        Args:
+        key: The key to compare against.
+
+        Returns:
+        The largest key in the map less than or equal to the given key.
+
+        """
         return om.floor(self.map, key)
 
     def ceiling(self, key):
+        """
+        Returns the smallest key in the map greater than or equal to the given key.
 
+        Args:
+        key: The key to compare against.
+
+        Returns:
+        The smallest key in the map greater than or equal to the given key.
+
+        """
         return om.ceiling(self.map, key)
 
     def select(self, k):
+        """
+        Returns the next key to the k-th smallest key in the table.
+
+        Args:
+            map: The symbol table.
+            pos: The k-th smallest key.
+        Returns:
+            The key that is the smallest and greater than or equal to key.
+        Raises:
+            Exception
+        """
 
         return om.select(self.map, k)
-    def rank(self, key):
+    def rank(self, key)->int:
+        """
+        Returns the number of keys in the table that are strictly less than the given key.
+        Args:
+            map: The symbol table.
+            key: The key to compare.
+        Returns:
+            The number of keys in the table that are strictly less than the given key.
+        Raises:
+            Exception
+        """
 
         return om.rank(self.map, key)
-    def height(self):
+    def height(self) -> int:
+        """
+        Returns the height of the map.
 
+        Returns:
+        The height of the map.
+
+        """
         return om.height(self.map)
+
     def keys(self, key1, key2):
+        """
+        Returns a list of all keys in the map between key1 and key2.
 
-        return om.keys(self.map, key1, key2)
+        Args:
+        key1: The first key in the range.
+        key2: The second key in the range.
+
+        Returns:
+        A list of all keys in the map between key1 and key2.
+
+        """
+        return List(adt=om.keys(self.map, key1, key2))
+
     def values(self, key1, key2):
+        """
+        Returns a list of all values in the map between key1 and key2.
 
-        return om.values(self.map, key1, key2)
+        Args:
+        key1: The first key in the range.
+        key2: The second key in the range.
+
+        Returns:
+        A list of all values in the map between key1 and key2.
+
+        """
+        return List(adt=om.values(self.map, key1, key2))
 
 
 
