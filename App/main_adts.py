@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
- 
+
 import config as cf
 from tabulate import tabulate
 from DISClib.ADT import list as lt
@@ -35,6 +35,7 @@ from DISClib.Algorithms.Sorting import mergesort as merg
 from DISClib.Algorithms.Sorting import quicksort as quk
 assert cf
 
+
 class List:
     """
     A custom list class that can use different data structures and comparison functions.
@@ -46,7 +47,7 @@ class List:
         sorted: A boolean flag indicating whether the list is sorted or not.
         elements: A reference to the list elements (either an array or a node).
     """
-    
+
     def __init__(self, datastructure="ARRAY_LIST", cmpfunction=None, adt=None, sorted=False):
         """
         Initializes a List object with the given parameters.
@@ -75,7 +76,7 @@ class List:
                 self.elements = self.list["elements"]
             else:
                 self.elements = self.list["first"]
-    
+
     def __str__(self) -> str:
         """
         Returns a string representation of the list.
@@ -87,7 +88,7 @@ class List:
             return str(self.elements)
         else:
             return str(self.list["first"])
-    
+
     def __len__(self) -> int:
         """
         Returns the number of elements in the list.
@@ -96,7 +97,7 @@ class List:
             An integer representing the size of the list.
         """
         return lt.size(self.list)
-    
+
     def __iter__(self):
         """
         Returns an iterator over the list elements.
@@ -105,7 +106,7 @@ class List:
             An iterator object that can be used in a for loop or with next().
         """
         return lt.iterator(self.list)
-    
+
     def __type__(self):
         """
         Returns a string describing the type of the list.
@@ -114,7 +115,7 @@ class List:
             A string containing the ADT name and the data structure name.
         """
         return f"ADT : list , Datastructure: {self.datastructure}"
-    
+
     def addFirst(self, element):
         """
         Adds an element at the beginning of the list.
@@ -126,7 +127,7 @@ class List:
             Exception: If there is no space left in the list (only for array lists).
         """
         lt.addFirst(self.list, element)
-    
+
     def addLast(self, element):
         """
         Adds an element at the end of the list.
@@ -138,7 +139,7 @@ class List:
             Exception: If there is no space left in the list (only for array lists).
         """
         lt.addLast(self.list, element)
-    
+
     def isEmpty(self) -> bool:
         """
         Checks if the list is empty or not.
@@ -147,7 +148,7 @@ class List:
             True if the list has no elements, False otherwise.
         """
         return lt.isEmpty(self.list)
-    
+
     def size(self) -> int:
         """
         Returns the number of elements in the list.
@@ -156,7 +157,7 @@ class List:
             An integer representing the size of the list.
         """
         return lt.size(self.list)
-    
+
     def firstElement(self):
         """
         Returns the first element of the list.
@@ -165,7 +166,7 @@ class List:
             The element at the first position of the list, or None if the list is empty.
         """
         return lt.firstElement(self.list)
-    
+
     def lastElement(self):
         """
         Returns the last element of the list.
@@ -174,7 +175,7 @@ class List:
             The element at the last position of the list, or None if the list is empty.
         """
         return lt.lastElement(self.list)
-    
+
     def getElement(self, pos):
         """
         Returns the element at a given position of the list.
@@ -189,7 +190,7 @@ class List:
             IndexError: If the position is out of range (less than 1 or greater than the size of the list).
         """
         return lt.getElement(self.list, pos)
-    
+
     def deleteElement(self, pos):
         """
         Deletes and returns the element at a given position of the list.
@@ -204,7 +205,7 @@ class List:
             IndexError: If the position is out of range (less than 1 or greater than the size of the list).
         """
         return lt.deleteElement(self.list, pos)
-    
+
     def removeFirst(self):
         """
         Removes and returns the first element of the list.
@@ -213,7 +214,7 @@ class List:
             The element that was removed from the list, or None if the list is empty.
         """
         return lt.removeFirst(self.list)
-    
+
     def removeLast(self):
         """
         Removes and returns the last element of the list.
@@ -222,7 +223,7 @@ class List:
             The element that was removed from the list, or None if the list is empty.
         """
         return lt.removeLast(self.list)
-    
+
     def insertElement(self, element, pos):
         """
         Inserts an element at a given position of the list.
@@ -238,7 +239,7 @@ class List:
             IndexError: If the position is out of range (less than 1 or greater than the size of the list + 1).
         """
         return lt.insertElement(self.list, element, pos)
-    
+
     def isPresent(self, element):
         """
         Checks whether an element is present in the list.
@@ -250,7 +251,7 @@ class List:
             True if the element is present in the list, False otherwise.
         """
         return lt.isPresent(self.list, element)
-    
+
     def exchange(self, pos1, pos2):
         """
         Exchanges the elements at two positions in the list.
@@ -263,7 +264,7 @@ class List:
             IndexError: If either position is out of range (less than 1 or greater than the size of the list).
         """
         return lt.exchange(self.list, pos1, pos2)
-    
+
     def changeInfo(self, pos, element):
         """
         Changes the value of an element in the list.
@@ -276,7 +277,7 @@ class List:
             IndexError: If the position is out of range (less than 1 or greater than the size of the list).
         """
         return
-    
+
     def subList(self, pos1, numElements):
         """
         Returns a new list that contains a portion of the original list.
@@ -291,14 +292,14 @@ class List:
         sub_list = List(adt=sub_list)
 
         return sub_list
-    
+
     def iterator(self):
         """
         Return the iterator for the list.
         """
         return lt.iterator(self.list)
-    
-    def sort(self, sort_criteria = None):
+
+    def sort(self, sort_criteria=None):
         """
         Sort the list.
         Args:
@@ -323,6 +324,7 @@ class List:
         Returns:
             The decorated function.
         """
+
         def decorator(self, *args):
 
             if self.sorted:
@@ -335,11 +337,8 @@ class List:
 
         return decorator
 
-
-
-
     @isSorted
-    def linealSearch(self,element):
+    def linealSearch(self, element):
         """
         Perform a linear search on the list.
         Args:
@@ -471,6 +470,7 @@ class List:
                 pos += 1
         return pos
 
+
 class Stack:
     def __init__(self, datastructure="DOUBLE_LINKED") -> object:
         """
@@ -482,7 +482,7 @@ class Stack:
         """
         self.stack = st.newStack(datastructure)
         self.datastructure = datastructure
-    
+
     def __str__(self) -> str:
         """
         Returns a string representation of the elements in the stack.
@@ -543,7 +543,7 @@ class Stack:
         """
         return st.pop(self.stack)
 
-    def isEmpty(self) -> bool:
+    def isEmpty(self) -> bool | None:
         """
         Returns a boolean indicating whether the stack is empty or not.
 
@@ -561,7 +561,7 @@ class Stack:
         """
         return st.top(self.stack)
 
-    def size(self) -> int:
+    def size(self) -> int|None:
         """
         Returns the number of elements in the stack.
 
@@ -573,7 +573,7 @@ class Stack:
 
 class Queue:
 
-    def __init__(self, datastructure)-> object:
+    def __init__(self, datastructure):
         """
         Initializes a new queue instance, with an internal storage data structure of the specified type.
 
@@ -653,7 +653,7 @@ class Queue:
         """
         return qu.peek(self.queue)
 
-    def isEmpty(self) -> bool:
+    def isEmpty(self) -> bool | None:
         """
         Returns a boolean indicating whether the queue is empty or not.
 
@@ -662,7 +662,7 @@ class Queue:
         """
         return qu.isEmpty(self.queue)
 
-    def size(self) -> int:
+    def size(self) -> int | None:
         """
         Returns the number of elements in the queue.
 
@@ -674,7 +674,7 @@ class Queue:
 
 class HashMap:
 
-    def __init__(self, numelements=17, maptype = "CHAINING", loadfactor = 4.0, cmpfunction = None):
+    def __init__(self, numelements=17, maptype="CHAINING", loadfactor=4.0, cmpfunction=None):
         """
         Initializes the HashMap object, creating the map with the specified parameters.
 
@@ -693,11 +693,11 @@ class HashMap:
         loadfactor: the maximum load factor allowed
         cmpfunction: the function used for comparing keys
         """
-        self.map = mp.newMap(numelements=numelements, maptype=maptype, loadfactor=loadfactor, cmpfunction=cmpfunction)
+        self.map = mp.newMap(numelements=numelements, maptype=maptype,
+                             loadfactor=loadfactor, cmpfunction=cmpfunction)
         self.maptype = maptype
         self.loadfactor = loadfactor
         self.cmpfunction = cmpfunction
-        
 
     def __str__(self) -> str:
         """
@@ -765,7 +765,6 @@ class HashMap:
         """
         return mp.contains(self.map, key)
 
-
     def isEmpty(self) -> bool:
         """
         Checks if the map object is empty.
@@ -775,7 +774,6 @@ class HashMap:
         """
         return mp.isEmpty(self.map)
 
-
     def size(self) -> int:
         """
         Returns the size of the map object.
@@ -784,7 +782,6 @@ class HashMap:
         - int: the size of the map object.
         """
         return mp.size(self.map)
-
 
     def keySet(self):
         """
@@ -796,7 +793,6 @@ class HashMap:
         keySet = mp.keySet(self.map)
         return List(adt=keySet)
 
-
     def valueSet(self):
         """
         Gets a collection of values from the map object and returns it as a List object.
@@ -806,6 +802,7 @@ class HashMap:
         """
         valueSet = mp.valueSet(self.map)
         return List(adt=valueSet)
+
 
 class OrderedMap:
     """
@@ -829,7 +826,6 @@ class OrderedMap:
         self.omaptype = omaptype
         self.comparefunction = comparefunction
 
-
     def __str__(self) -> str:
         """
         Returns a string with a list of the keys in the ordered map.
@@ -841,7 +837,6 @@ class OrderedMap:
         keyList = List(adt=keys)
         return keyList.__str__()
 
-
     def __len__(self) -> int:
         """
         Returns the number of elements in the ordered map.
@@ -850,7 +845,6 @@ class OrderedMap:
         int: The number of elements in the ordered map.
         """
         return om.size(self.map)
-
 
     def type(self) -> str:
         """
@@ -861,7 +855,6 @@ class OrderedMap:
         """
         return f"ADT : ordered map , Datastructure: {self.omaptype}"
 
-
     def put(self, key, value):
         """
         Inserts a key-value pair into the ordered map.
@@ -871,7 +864,6 @@ class OrderedMap:
         - value: The value associated with the key to be inserted.
         """
         om.put(self.map, key, value)
-
 
     def get(self, key):
         """
@@ -885,7 +877,6 @@ class OrderedMap:
         """
         return om.get(self.map, key)
 
-
     def remove(self, key):
         """
         Removes a key-value pair from the ordered map.
@@ -897,7 +888,6 @@ class OrderedMap:
         Any: The value associated with the key removed, or None if the key does not exist.
         """
         return om.remove(self.map, key)
-
 
     def contains(self, key):
         """
@@ -911,7 +901,6 @@ class OrderedMap:
         """
         return om.contains(self.map, key)
 
-
     def size(self) -> int:
         """
         Returns the number of elements in the ordered map.
@@ -921,7 +910,6 @@ class OrderedMap:
         """
         return om.size(self.map)
 
-
     def isEmpty(self) -> bool:
         """
         Checks if the ordered map is empty.
@@ -930,6 +918,7 @@ class OrderedMap:
         bool: True if the map is empty, else False.
         """
         return om.isEmpty(self.map)
+
     def keySet(self):
         """
         Returns a list of all keys in the map.
@@ -1032,7 +1021,8 @@ class OrderedMap:
         """
 
         return om.select(self.map, k)
-    def rank(self, key)->int:
+
+    def rank(self, key) -> int:
         """
         Returns the number of keys in the table that are strictly less than the given key.
         Args:
@@ -1045,6 +1035,7 @@ class OrderedMap:
         """
 
         return om.rank(self.map, key)
+
     def height(self) -> int:
         """
         Returns the height of the map.
@@ -1082,8 +1073,3 @@ class OrderedMap:
 
         """
         return List(adt=om.values(self.map, key1, key2))
-
-
-
-
-
