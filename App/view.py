@@ -22,12 +22,15 @@
 
 import config as cf
 import sys
-import controller
+import controller as ctrl
 from DISClib.ADT import list as lt
 from DISClib.ADT import stack as st
 from DISClib.ADT import queue as qu
 from DISClib.ADT import map as mp
+from DISClib.ADT import orderedmap as om
 from DISClib.DataStructures import mapentry as me
+import datetime
+import calendar
 assert cf
 from tabulate import tabulate
 import traceback
@@ -44,8 +47,7 @@ def new_controller():
     """
         Se crea una instancia del controlador
     """
-    #TODO: Llamar la función del controlador donde se crean las estructuras de datos
-    pass
+    return ctrl.new_controller()
 
 
 def print_menu():
@@ -62,12 +64,11 @@ def print_menu():
     print("0- Salir")
 
 
-def load_data(control):
+def load_data(control, size):
     """
     Carga los datos
     """
-    #TODO: Realizar la carga de datos
-    pass
+    return ctrl.load_data(control, size)
 
 
 def print_data(control, id):
@@ -76,22 +77,57 @@ def print_data(control, id):
     """
     #TODO: Realizar la función para imprimir un elemento
     pass
+def convertir_mes_nombre_a_numero(mes_nombre):
+    meses = {
+        'enero': 1,
+        'febrero': 2,
+        'marzo': 3,
+        'abril': 4,
+        'mayo': 5,
+        'junio': 6,
+        'julio': 7,
+        'agosto': 8,
+        'septiembre': 9,
+        'octubre': 10,
+        'noviembre': 11,
+        'diciembre': 12
+    }
+    return meses[mes_nombre.lower()]
 
-def print_req_1(control):
+def print_req_1(control, inicio, fin):
     """
         Función que imprime la solución del Requerimiento 1 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 1
-    pass
+    ini=inicio
+    fi=fin
+    inicio+=" 00:00:00 a"
+    fin+=" 23:59:59 z"
+    lst = ctrl.req_1(control, inicio, fin)
+    print(f"Hay {lt.size(lst)} registrados entre {ini} y {fi}")
+    lstTabulate = []
+    headers=["CODIGO_ACCIDENTE", "DIA_OCURRENCIA_ACC", "DIRECCION", "GRAVEDAD", "CLASE_ACC","LOCALIDAD","FECHA_HORA_ACC", "LATITUD", "LONGITUD"]
+    for sinis in lt.iterator(lst):
+        lstTabulate.append([sinis[headers[i]] for i in range(len(headers))])
+    print(tabulate(lstTabulate, headers=headers, tablefmt='grid',  numalign="right", stralign="right"))
 
 
-def print_req_2(control):
+def print_req_2(control,inicio, fin, mes:str, anio):
     """
         Función que imprime la solución del Requerimiento 2 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 2
-    pass
-
+    if not mes.isnumeric():
+        mes = convertir_mes_nombre_a_numero(mes)
+    fecha = datetime.datetime(int(anio), int(mes), 1)
+    ultimo_dia = calendar.monthrange(fecha.year, fecha.month)[1]
+    interv1=f"{anio}/{mes}/1 {inicio}:00 a"
+    interv2=f"{anio}/{mes}/{ultimo_dia} {fin}:59 z"
+    lst = ctrl.req_2(control, interv1, interv2, inicio, fin)
+    print(f"Hay {lt.size(lst)} accidentes")
+    lstTabulate = []
+    headers=["CODIGO_ACCIDENTE", "HORA_OCURRENCIA_ACC","FECHA_OCURRENCIA_ACC", "DIA_OCURRENCIA_ACC","LOCALIDAD", "DIRECCION", "GRAVEDAD", "CLASE_ACC", "LATITUD", "LONGITUD"]
+    for sinis in lt.iterator(lst):
+        lstTabulate.append([sinis[headers[i]] for i in range(len(headers))])
+    print(tabulate(lstTabulate, headers=headers, tablefmt='grid',  numalign="right", stralign="right"))
 
 def print_req_3(control):
     """
@@ -101,12 +137,21 @@ def print_req_3(control):
     pass
 
 
-def print_req_4(control):
+def print_req_4(control, inicio, fin, gravedad):
     """
         Función que imprime la solución del Requerimiento 4 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 4
-    pass
+    ini=inicio
+    fi=fin
+    inicio+=" 00:00:00 a"
+    fin+=" 23:59:59 z"
+    lst = ctrl.req_4(control, inicio, fin, gravedad)
+    print(f"Hay {lt.size(lst)} registrados entre {ini} y {fi}")
+    lstTabulate = []
+    headers=["CODIGO_ACCIDENTE", "FECHA_HORA_ACC","DIA_OCURRENCIA_ACC", "LOCALIDAD","DIRECCION",  "CLASE_ACC","LATITUD", "LONGITUD"]
+    for sinis in lt.iterator(lst):
+        lstTabulate.append([sinis[headers[i]] for i in range(len(headers))])
+    print(tabulate(lstTabulate, headers=headers, tablefmt='grid',  numalign="right", stralign="right"))
 
 
 def print_req_5(control):
@@ -117,13 +162,46 @@ def print_req_5(control):
     pass
 
 
-def print_req_6(control):
+def print_req_6(control, mes, anio, lat, long, rad, n_acc):
     """
         Función que imprime la solución del Requerimiento 6 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 6
-    pass
+    if not mes.isnumeric():
+        mes = convertir_mes_nombre_a_numero(mes)
+    fecha = datetime.datetime(int(anio), int(mes), 1)
+    ultimo_dia = calendar.monthrange(fecha.year, fecha.month)[1]
+    interv1=f"{anio}/{mes}/1 00:00:00 a"
+    interv2=f"{anio}/{mes}/{ultimo_dia} 23:59:59 z"
+    lst = ctrl.req_6(control, interv1, interv2, float(lat), float(long), float(rad), int(n_acc))
+    print(f"Hay {lt.size(lst)} accidentes")
+    lstTabulate = []
+    headers=["CODIGO_ACCIDENTE", "DIA_OCURRENCIA_ACC", "DIRECCION", "GRAVEDAD","CLASE_ACC", "FECHA_HORA_ACC", "LATITUD", "LONGITUD"]
+    for sinis in lt.iterator(lst):
+        lstTabulate.append([sinis[headers[i]] for i in range(len(headers))])
+    print(tabulate(lstTabulate, headers=headers, tablefmt='grid',  numalign="right", stralign="right"))
 
+def print_loader(control):
+    keys = om.valueSet(control["fechas"])
+    headers=["FECHA_OCURRENCIA_ACC", "FECHA_HORA_ACC", "LOCALIDAD", "DIRECCION", "GRAVEDAD", "CLASE_ACC", "LATITUD", "LONGITUD"]
+    print("Total accidentes:", om.size(control["fechas"]))
+    print("Total de columnas cargadas: 15")
+
+    if lt.size(keys) < 6:
+        lst=[]
+        for i in lt.iterator(keys):
+            lst.append([i[headers[j]] for j in range(len(headers))])
+        print(tabulate(lst, headers=headers, tablefmt='grid',  numalign="right", stralign="right"))
+    else:
+        primeros = lt.subList(keys, 1, 3) 
+        lst_prim = []
+        for siniestro in lt.iterator(primeros):
+            lst_prim.append([siniestro[headers[j]] for j in range(len(headers))])
+        print(tabulate(lst_prim, headers=headers, tablefmt='grid',  numalign="right", stralign="right"))
+        ultimos = lt.subList(keys, lt.size(keys)-3, 3 )
+        lst_ult = []
+        for siniestro in lt.iterator(ultimos):
+            lst_ult.append([siniestro[headers[j]] for j in range(len(headers))])
+        print(tabulate(lst_ult, headers=headers, tablefmt='grid'))
 
 def print_req_7(control):
     """
@@ -140,6 +218,25 @@ def print_req_8(control):
     # TODO: Imprimir el resultado del requerimiento 8
     pass
 
+def select(selection:str, lista:list)->(str):
+    if selection.isdigit() and int(selection) >=1 and int(selection)<=len(lista):
+        sizes=dict(enumerate(lista))
+        return sizes[int(selection)-1]
+    elif not selection.isdigit() and selection in lista:
+        return selection
+
+def print_sizes()->None:
+    print("""
+Digite uno de los siguientes tamaños:
+1)small
+2)5pct
+3)10pct
+4)20pct
+5)30pct
+6)50pct
+7)80pct
+8)large
+""")
 
 # Se crea el controlador asociado a la vista
 control = new_controller()
@@ -157,31 +254,56 @@ if __name__ == "__main__":
         try:
             if int(inputs) == 1:
                 print("Cargando información de los archivos ....\n")
-                data = load_data(control)
+                print_sizes()
+                t_archivo=input("Digite el tamaño deseado: ").replace(" ","")
+                size=select(t_archivo, ["small", "5pct","10pct","20pct", "30pct","50pct","80pct", "large"])
+                if size is None:
+                    print(" Por favor escoga un tamaño válido ")
+                data = load_data(control, size)
+                print_loader(control)
             elif int(inputs) == 2:
-                print_req_1(control)
+                print("Ingrese los intervalos en el formato año/mes/dia")
+                inicio = input("Ingrse el intervalo de inicio: ").replace(" ", "")
+                fin = input("Ingrese el intervalo final: ").replace(" ","")
+                print_req_1(control, inicio, fin)
 
             elif int(inputs) == 3:
-                print_req_2(control)
+                print("Ingrese los intervalos en el formato hora:minuto")
+                inicio = input("Ingrse el intervalo de inicio: ").replace(" ", "")
+                fin = input("Ingrese el intervalo final: ").replace(" ","")
+                mes = input("Ingrese el mes deseado: ").replace(" ","")
+                anio = input("Ingrese el año deseado: ").replace(" ","")
+                print_req_2(control, inicio, fin, mes, anio)
 
             elif int(inputs) == 4:
                 print_req_3(control)
 
             elif int(inputs) == 5:
-                print_req_4(control)
+                print("Ingrese los intervalos en el formato año/mes/dia")
+                inicio = input("Ingrse el intervalo de inicio: ").replace(" ", "")
+                fin = input("Ingrese el intervalo final: ").replace(" ","")
+                gravedad = input("Ingrese la gravedad del accidente: ").upper()
+                print_req_4(control, inicio, fin, gravedad)
 
             elif int(inputs) == 6:
                 print_req_5(control)
+                pass
 
             elif int(inputs) == 7:
-                print_req_6(control)
+                mes = input("Ingrese el mes deseado: ").replace(" ","")
+                anio = input("Ingrese el año deseado: ").replace(" ","")
+                lat = input("Ingrese la latitud: ").replace(" ","")
+                long = input("Ingrese la longitud: ").replace(" ","")
+                rad = input("Ingrese el radio de area en km: ").replace(" ","")
+                n_acc = input("Ingrese el numero de accidentes que desea obtener: ").replace(" ","")
+                print_req_6(control, mes, anio, lat, long, rad, n_acc)
 
             elif int(inputs) == 8:
                 print_req_7(control)
 
             elif int(inputs) == 9:
                 print_req_8(control)
-
+ 
             elif int(inputs) == 0:
                 working = False
                 print("\nGracias por utilizar el programa")
@@ -192,3 +314,4 @@ if __name__ == "__main__":
             print("ERR:", exp)
             traceback.print_exc()
     sys.exit(0)
+

@@ -39,12 +39,15 @@ from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Sorting import selectionsort as se
 from DISClib.Algorithms.Sorting import mergesort as merg
 from DISClib.Algorithms.Sorting import quicksort as quk
+import haversine
+import datetime as dt
 assert cf
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá
 dos listas, una para los videos, otra para las categorias de los mismos.
 """
+
 
 # Construccion de modelos
 
@@ -54,8 +57,10 @@ def new_data_structs():
     Inicializa las estructuras de datos del modelo. Las crea de
     manera vacía para posteriormente almacenar la información.
     """
-    #TODO: Inicializar las estructuras de datos
-    pass
+    catalog=  {
+        "fechas":om.newMap(comparefunction=delta_time)
+    }
+    return catalog
 
 
 # Funciones para agregar informacion al modelo
@@ -96,36 +101,43 @@ def data_size(data_structs):
     pass
 
 
-def req_1(data_structs):
+def req_1(data_structs, inicio, fin):
     """
     Función que soluciona el requerimiento 1
     """
-    # TODO: Realizar el requerimiento 1
-    pass
+    return  organizar(om.values(data_structs, inicio, fin), cmp_req1)
 
 
-def req_2(data_structs):
+def req_2(data_structs, interv1, interv2, inicio, fin):
     """
     Función que soluciona el requerimiento 2
     """
-    # TODO: Realizar el requerimiento 2
-    pass
+    hora1=dt.datetime.strptime(inicio, '%H:%M')
+    hora2=dt.datetime.strptime(fin, '%H:%M')
+    lst = lt.newList()
+    for value in lt.iterator( om.values(data_structs, interv1, interv2)):
+        if hora1 < dt.datetime.strptime(value.get("HORA_OCURRENCIA_ACC"), '%H:%M:%S') < hora2:
+            lt.addLast(lst, value)
+    return organizar(lst, cmp_req1)
 
 
-def req_3(data_structs):
+def req_3(data_structs, inicio, fin):
     """
     Función que soluciona el requerimiento 3
     """
-    # TODO: Realizar el requerimiento 3
     pass
 
 
-def req_4(data_structs):
-    """
+def req_4(data_structs, inicio, fin, gravedad):
+    """ 
     Función que soluciona el requerimiento 4
     """
-    # TODO: Realizar el requerimiento 4
-    pass
+    lst = lt.newList()
+    for value in lt.iterator( om.values(data_structs, inicio, fin)):
+        if gravedad in value.get("GRAVEDAD"):
+            lt.addLast(lst, value)
+    return lt.subList(organizar(lst, cmp_req1), 1, 5)
+
 
 
 def req_5(data_structs):
@@ -136,12 +148,18 @@ def req_5(data_structs):
     pass
 
 
-def req_6(data_structs):
+def req_6(data_structs, interv1, interv2, lat, long, rad, n_acc):
     """
     Función que soluciona el requerimiento 6
     """
-    # TODO: Realizar el requerimiento 6
-    pass
+    lst_interv=om.values(data_structs, interv1, interv2)
+    ajustarlat_long(lat, long)
+    lst= lt.newList()
+    for value in lt.iterator(lst_interv):
+        if haversine.haversine((float(value.get("LATITUD")),float(value.get("LONGITUD"))), (lat_base, long_base)) <= rad:
+            print(haversine.haversine((float(value.get("LATITUD")),float(value.get("LONGITUD"))), (lat_base, long_base)))
+            lt.addLast(lst, value)
+    return lt.subList( organizar(lst, cmp_req6), 1, n_acc)
 
 
 def req_7(data_structs):
@@ -160,35 +178,53 @@ def req_8(data_structs):
     pass
 
 
-# Funciones utilizadas para comparar elementos dentro de una lista
+def ajustarlat_long(lat, long):
+    globals()["lat_base"]=lat
+    globals()["long_base"]=long
 
-def compare(data_1, data_2):
-    """
-    Función encargada de comparar dos datos
-    """
-    #TODO: Crear función comparadora de la lista
-    pass
-
-# Funciones de ordenamiento
-
-
-def sort_criteria(data_1, data_2):
-    """sortCriteria criterio de ordenamiento para las funciones de ordenamiento
-
-    Args:
-        data1 (_type_): _description_
-        data2 (_type_): _description_
-
-    Returns:
-        _type_: _description_
-    """
-    #TODO: Crear función comparadora para ordenar
-    pass
-
-
-def sort(data_structs):
+def organizar(lst, cmp):
     """
     Función encargada de ordenar la lista con los datos
     """
-    #TODO: Crear función de ordenamiento
-    pass
+    return merg.sort(lst, cmp)
+
+
+#cmp functions
+
+
+def cmp_req1(obj1, obj2):
+    if delta_time(obj1.get("FECHA_OCURRENCIA_ACC")+" "+obj1.get("HORA_OCURRENCIA_ACC"), obj2.get("FECHA_OCURRENCIA_ACC")+" "+obj2.get("HORA_OCURRENCIA_ACC")) == 1:
+        return True
+    else: return False
+
+def cmp_req6(obj1, obj2):
+    hav1=haversine.haversine((float(obj1.get("LATITUD")),float(obj1.get("LONGITUD"))), (lat_base, long_base))
+    hav2=haversine.haversine((float(obj2.get("LATITUD")),float(obj2.get("LONGITUD"))), (lat_base, long_base))
+    if hav1 < hav2:
+        return True
+    else:
+        return False
+
+def delta_time(time1:str, time2:str):
+    date1, dir1 = separar_fecha_dir(time1)
+    date2, dir2 = separar_fecha_dir(time2)
+    datee1 = dt.datetime.strptime(date1, '%Y/%m/%d %H:%M:%S')
+    datee2 = dt.datetime.strptime(date2, '%Y/%m/%d %H:%M:%S')
+    if datee1 > datee2:
+        return 1
+    elif datee2 == datee1:
+        if dir1 > dir2:
+            return 1
+        elif dir1 == dir2:
+            return 0
+        else:
+            return -1
+    else:
+        return -1
+    
+def separar_fecha_dir(time):
+    partes = time.split()
+    fecha_hora = " ".join(partes[:2]) 
+    direccion = " ".join(partes[2:])  
+    
+    return fecha_hora, direccion

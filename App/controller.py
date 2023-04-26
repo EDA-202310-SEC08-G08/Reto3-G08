@@ -25,6 +25,8 @@ import model
 import time
 import csv
 import tracemalloc
+from DISClib.ADT import orderedmap as om
+
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
@@ -35,18 +37,25 @@ def new_controller():
     """
     Crea una instancia del modelo
     """
-    #TODO: Llamar la función del modelo que crea las estructuras de datos
-    pass
+    return model.new_data_structs()
+    
 
 
-# Funciones para la carga de datos
-
+# Funciones para la carga de datosom
 def load_data(control, filename):
     """
     Carga los datos del reto
     """
-    # TODO: Realizar la carga de datos
-    pass
+    path = cf.data_dir +f"siniestros/datos_siniestralidad-{filename}.csv"
+    file=csv.DictReader(open(path, encoding="utf-8"))
+    for siniestro in file:
+        load_fecha(control["fechas"], siniestro)
+        
+
+def load_fecha(arbol, siniestro:dict):
+    llave=siniestro.get("FECHA_OCURRENCIA_ACC").replace(" ","")+" "+siniestro.get("HORA_OCURRENCIA_ACC").replace(" ","")+" "+siniestro.get("DIRECCION")
+    om.put(arbol, llave, siniestro)
+
 
 
 # Funciones de ordenamiento
@@ -69,20 +78,19 @@ def get_data(control, id):
     pass
 
 
-def req_1(control):
+def req_1(control, inicio, fin):
     """
     Retorna el resultado del requerimiento 1
     """
-    # TODO: Modificar el requerimiento 1
-    pass
+    return model.req_1(control["fechas"], inicio, fin)
 
 
-def req_2(control):
+def req_2(control,interv1, interv2, inicio, fin):
     """
     Retorna el resultado del requerimiento 2
     """
-    # TODO: Modificar el requerimiento 2
-    pass
+    return model.req_2(control["fechas"], interv1, interv2, inicio, fin)
+
 
 
 def req_3(control):
@@ -93,12 +101,11 @@ def req_3(control):
     pass
 
 
-def req_4(control):
+def req_4(control, inicio, fin, gravedad):
     """
     Retorna el resultado del requerimiento 4
     """
-    # TODO: Modificar el requerimiento 4
-    pass
+    return model.req_4(control["fechas"], inicio, fin, gravedad)
 
 
 def req_5(control):
@@ -108,12 +115,11 @@ def req_5(control):
     # TODO: Modificar el requerimiento 5
     pass
 
-def req_6(control):
+def req_6(control, interv1, interv2, lat, long, rad, n_acc):
     """
     Retorna el resultado del requerimiento 6
     """
-    # TODO: Modificar el requerimiento 6
-    pass
+    return model.req_6(control["fechas"], interv1, interv2, lat, long, rad, n_acc)
 
 
 def req_7(control):
