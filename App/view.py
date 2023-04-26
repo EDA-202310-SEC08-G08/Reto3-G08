@@ -262,10 +262,13 @@ if __name__ == "__main__":
                 data = load_data(control, size)
                 print_loader(control)
             elif int(inputs) == 2:
+                time1 = ctrl.get_time() 
                 print("Ingrese los intervalos en el formato año/mes/dia")
                 inicio = input("Ingrse el intervalo de inicio: ").replace(" ", "")
                 fin = input("Ingrese el intervalo final: ").replace(" ","")
                 print_req_1(control, inicio, fin)
+                time2 = ctrl.get_time()
+                print(ctrl.delta_time(time1, time2))
 
             elif int(inputs) == 3:
                 print("Ingrese los intervalos en el formato hora:minuto")
