@@ -41,6 +41,7 @@ from DISClib.Algorithms.Sorting import mergesort as merg
 from DISClib.Algorithms.Sorting import quicksort as quk
 assert cf
 from prettytable import PrettyTable as ptbl
+from datetime import datetime as dt
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá
@@ -68,9 +69,9 @@ def cmp_by_id(data_1, data_2):
     """
     Función encargada de comparar dos datos
     """
-    if data_1["CODIGO_ACCIDENTE"] > data_2["CODIGO_ACCIDENTE"]:
+    if data_1 > data_2:
         return 1
-    elif data_1["CODIGO_ACCIDENTE"] < data_2["CODIGO_ACCIDENTE"]:
+    elif data_1 < data_2:
         return -1
     else:
         return 0
@@ -83,7 +84,7 @@ def add_data(data_structs, data):
     """
     #TODO: Crear la función para agregar elementos a una lista
     
-    om.put(data_structs["all_data"], data, data["CODIGO_ACCIDENTE"])
+    om.put(data_structs["all_data"], data["CODIGO_ACCIDENTE"], data)
 
     return data_structs
 
@@ -147,12 +148,45 @@ def req_4(data_structs):
     pass
 
 
-def req_5(data_structs):
+def req_5(año, mes, localidad, data_structs):
     """
     Función que soluciona el requerimiento 5
     """
     # TODO: Realizar el requerimiento 5
-    pass
+    
+    acc = lt.newList()
+    
+    for accidente in lt.iterator(om.valueSet(data_structs)):
+        if int(accidente['ANO_OCURRENCIA_ACC']) == año and accidente["MES_OCURRENCIA_ACC"] == mes and accidente["LOCALIDAD"] == localidad:
+            lt.addLast(acc, accidente)
+            
+    merg.sort(acc, req_5_sort_criteria)
+    
+    size = lt.size(acc)
+    if size > 10:
+        acc = lt.subList(acc, 0, 10)
+        
+    columns = ['CODIGO_ACCIDENTE',
+               'DIA_OCURRENCIA_ACC',
+               'DIRECCION',
+               'GRAVEDAD',
+               'CLASE_ACC',
+               'FECHA_HORA_ACC',
+               'LATITUD',
+               'LONGITUD'
+               ]
+    
+    return tablify(acc, columns), size
+            
+   
+   
+def req_5_sort_criteria(data1, data2):
+    
+    
+    if dt.strptime(data1["FECHA_HORA_ACC"], '%Y/%m/%d %H:%M:%S+%f') > dt.strptime(data2['FECHA_HORA_ACC'], '%Y/%m/%d %H:%M:%S+%f'):
+        return True
+    else:
+        return False         
 
 
 def req_6(data_structs):
@@ -246,3 +280,22 @@ def FirstandLast(list, count, columns):
         table2.hrules = True
 
     return table1, table2
+
+def tablify(list, columns):
+
+    table = ptbl()
+    size = lt.size(list)
+    table.field_names = columns
+    table.max_width = 35
+
+    for i in range(1, size+1):
+
+        data = lt.getElement(list, i)
+        rows = []
+
+        for n in range(0, len(columns)):
+            rows.append(data[columns[n]])
+        table.add_row(rows)
+        table.hrules = True
+
+    return table

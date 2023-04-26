@@ -117,7 +117,19 @@ def print_req_5(control):
         Función que imprime la solución del Requerimiento 5 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 5
-    pass
+    año = int(input("Ingrese el año entre 2015 y 2022 para el que quiere ver los accidentes recientes:"))
+    mes = input("Ingrese el mes (en letras) para el que quiere ver los accidentes recientes:").upper()
+    localidad = input("Ingrese la localidad de Bogotá para la que quiere ver los accidentes recientes:").upper()
+    
+    top10tabla, size = controller.req_5(año, mes, localidad, control)
+    tam = size
+    if size > 10:
+        tam = 10
+    print('\n####################################################################')
+    print(f'Hay {size} accidentes ocurridos en la localidad de {localidad} en el mes de {mes} del año {año}.')
+    print(f'Estos son los {tam} accidentes menos recientes:')
+    
+    print(top10tabla)
 
 
 def print_req_6(control):
@@ -235,7 +247,7 @@ if __name__ == "__main__":
                 print("---------------------------------------------------------------")
                 print("Información de los accidentes cargados:")
                 print(f"Total de accidentes: {om.size(control['model']['all_data'])}")
-                print(f"Total de columnas cargadas: {len(control['model']['all_data']['root']['key'])}")
+                print(f"Total de columnas cargadas: {len(control['model']['all_data']['root']['value'])}")
                 print("---------------------------------------------------------------\n")
                 
                 print("Los primeros tres registros de accidentes cargados:")
