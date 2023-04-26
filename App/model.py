@@ -40,6 +40,7 @@ from DISClib.Algorithms.Sorting import selectionsort as se
 from DISClib.Algorithms.Sorting import mergesort as merg
 from DISClib.Algorithms.Sorting import quicksort as quk
 assert cf
+from prettytable import PrettyTable as ptbl
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá
@@ -54,9 +55,25 @@ def new_data_structs():
     Inicializa las estructuras de datos del modelo. Las crea de
     manera vacía para posteriormente almacenar la información.
     """
-    #TODO: Inicializar las estructuras de datos
-    pass
+    data_structs = {
+        "all_data": None,
+    }
 
+    data_structs["all_data"] = om.newMap(comparefunction=cmp_by_id)
+
+    return data_structs
+
+
+def cmp_by_id(data_1, data_2):
+    """
+    Función encargada de comparar dos datos
+    """
+    if data_1["CODIGO_ACCIDENTE"] > data_2["CODIGO_ACCIDENTE"]:
+        return 1
+    elif data_1["CODIGO_ACCIDENTE"] < data_2["CODIGO_ACCIDENTE"]:
+        return -1
+    else:
+        return 0
 
 # Funciones para agregar informacion al modelo
 
@@ -65,16 +82,18 @@ def add_data(data_structs, data):
     Función para agregar nuevos elementos a la lista
     """
     #TODO: Crear la función para agregar elementos a una lista
-    pass
+    
+    om.put(data_structs["all_data"], data, data["CODIGO_ACCIDENTE"])
+
+    return data_structs
 
 
 # Funciones para creacion de datos
 
-def new_data(id, info):
+def new_data(info):
     """
     Crea una nueva estructura para modelar los datos
     """
-    #TODO: Crear la función para estructurar los datos
     pass
 
 
@@ -192,3 +211,38 @@ def sort(data_structs):
     """
     #TODO: Crear función de ordenamiento
     pass
+
+def FirstandLast(list, count, columns):
+
+    table1 = ptbl()
+    table2 = ptbl()
+    size = len(list)
+    table1.field_names = columns
+    table1.max_width = 35
+    table2.field_names = columns
+    table2.max_width = 35
+    
+    first = list[:count]
+    last = list[-count:]
+
+    for i in range(0, count):
+
+        data = first[i]
+        rows = []
+
+        for n in range(0, len(columns)):
+            rows.append(data[columns[n]])
+        table1.add_row(rows)
+        table1.hrules = True
+
+    for i in range(0, count):
+
+        data = last[i]
+        rows = []
+
+        for n in range(0, len(columns)):
+            rows.append(data[columns[n]])
+        table2.add_row(rows)
+        table2.hrules = True
+
+    return table1, table2

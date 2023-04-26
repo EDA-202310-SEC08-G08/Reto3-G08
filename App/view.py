@@ -28,6 +28,7 @@ from DISClib.ADT import stack as st
 from DISClib.ADT import queue as qu
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
+from DISClib.ADT import orderedmap as om
 assert cf
 from tabulate import tabulate
 import traceback
@@ -45,7 +46,8 @@ def new_controller():
         Se crea una instancia del controlador
     """
     #TODO: Llamar la función del controlador donde se crean las estructuras de datos
-    pass
+    control = controller.new_controller()
+    return control
 
 
 def print_menu():
@@ -62,12 +64,13 @@ def print_menu():
     print("0- Salir")
 
 
-def load_data(control):
+def load_data(control, suffix):
     """
     Carga los datos
     """
     #TODO: Realizar la carga de datos
-    pass
+    data, firstlast = controller.load_data(control, f"siniestros/datos_siniestralidad{suffix}")
+    return data, firstlast
 
 
 def print_data(control, id):
@@ -140,6 +143,73 @@ def print_req_8(control):
     # TODO: Imprimir el resultado del requerimiento 8
     pass
 
+def printchooseCSV():
+    print('\nIngrese la representación de los datos que quiere usar: ')
+    print(' 1. -small')
+    print(' 2. -5pct')
+    print(' 3. -10pct')
+    print(' 4. -20pct')
+    print(' 5. -30pct')
+    print(' 6. -50pct')
+    print(' 7. -80pct')
+    print(' 8. -large')
+
+def fileChoose():
+    """
+
+    Da opciones al usuario para que escoja la representación de los datos de su preferencia
+
+    Returns:
+
+        El sufijo de la representación de los datos escogida
+    """
+    fileChoose = False
+    while fileChoose == False:
+
+        suffixFileChoose = input('Opción seleccionada: ')
+        if int(suffixFileChoose[0]) == 1:
+            suffix = '-small'
+            print('\nSeleciono el archivo ' + suffix)
+            suffix += '.csv'
+            fileChoose = True
+        elif int(suffixFileChoose[0]) == 2:
+            suffix = '-5pct'
+            print('\nSeleciono el archivo ' + suffix)
+            suffix += '.csv'
+            fileChoose = True
+        elif int(suffixFileChoose[0]) == 3:
+            suffix = '-10pct'
+            print('\nSeleciono el archivo ' + suffix)
+            suffix += '.csv'
+            fileChoose = True
+        elif int(suffixFileChoose[0]) == 4:
+            suffix = '-20pct'
+            print('\nSeleciono el archivo ' + suffix)
+            suffix += '.csv'
+            fileChoose = True
+        elif int(suffixFileChoose[0]) == 5:
+            suffix = '-30pct'
+            print('\nSeleciono el archivo ' + suffix)
+            suffix += '.csv'
+            fileChoose = True
+        elif int(suffixFileChoose[0]) == 6:
+            suffix = '-50pct'
+            print('\nSeleciono el archivo ' + suffix)
+            suffix += '.csv'
+            fileChoose = True
+        elif int(suffixFileChoose[0]) == 7:
+            suffix = '-80pct'
+            print('\nSeleciono el archivo ' + suffix)
+            suffix += '.csv'
+            fileChoose = True
+        elif int(suffixFileChoose[0]) == 8:
+            suffix = '-large'
+            print('\nSeleciono el archivo ' + suffix)
+            suffix += '.csv'
+            fileChoose = True
+
+    return suffix
+
 
 # Se crea el controlador asociado a la vista
 control = new_controller()
@@ -156,8 +226,23 @@ if __name__ == "__main__":
         inputs = input('Seleccione una opción para continuar\n')
         try:
             if int(inputs) == 1:
+                printchooseCSV()
+                suffix = fileChoose()
                 print("Cargando información de los archivos ....\n")
-                data = load_data(control)
+                data, firstlast = load_data(control, suffix)
+                tableFirst3, tableLast3 = controller.visual_charge_data(firstlast)
+                
+                print("---------------------------------------------------------------")
+                print("Información de los accidentes cargados:")
+                print(f"Total de accidentes: {om.size(control['model']['all_data'])}")
+                print(f"Total de columnas cargadas: {len(control['model']['all_data']['root']['key'])}")
+                print("---------------------------------------------------------------\n")
+                
+                print("Los primeros tres registros de accidentes cargados:")
+                print(tableFirst3)
+                print("\n")
+                print("Los últimos tres registros de accidentes cargados:")
+                print(tableLast3)
             elif int(inputs) == 2:
                 print_req_1(control)
 
