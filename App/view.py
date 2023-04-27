@@ -119,6 +119,7 @@ def print_req_5(control):
     """
         Función que imprime la solución del Requerimiento 5 en consola
     """
+    time1 = controller.get_time()
     año = int(input("Ingrese el año entre 2015 y 2022 para el que quiere ver los accidentes recientes:"))
     mes = input("Ingrese el mes (en letras) para el que quiere ver los accidentes recientes:").upper()
     localidad = input("Ingrese la localidad de Bogotá para la que quiere ver los accidentes recientes:").upper()
@@ -132,6 +133,8 @@ def print_req_5(control):
     print(f'Estos son los {tam} accidentes menos recientes:')
     
     print(top10tabla)
+    time2 = controller.get_time()
+    print(f"Tiempo de ejecución: {controller.delta_time(time1, time2)} ms.")
 
 
 def print_req_6(control):
@@ -146,7 +149,7 @@ def print_req_7(control):
     """
         Función que imprime la solución del Requerimiento 7 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 7
+    time1 = controller.get_time()
     año = int(input("Ingrese el año entre 2015 y 2022 para el que quiere ver los accidentes recientes:"))
     mes = int(input("Ingrese el mes (en números) para el que quiere ver los accidentes recientes:"))
     dias = calendar.monthrange(año, mes)[1]
@@ -203,6 +206,8 @@ def print_req_7(control):
     plt.subplots_adjust(top=0.90)
     plt.subplots_adjust(bottom=0.25)
     plt.show()
+    time2 = controller.get_time()
+    print(f"Tiempo de ejecución: {controller.delta_time(time1, time2)} ms.")
     
     
 
@@ -324,10 +329,7 @@ if __name__ == "__main__":
                 print_req_3(control)
 
             elif int(inputs) == 5:
-                time1 = controller.get_time()
                 print_req_4(control)
-                time2 = controller.get_time()
-                print(f"Tiempo de ejecución: {controller.delta_time(time1, time2)} ms.")
 
             elif int(inputs) == 6:
                 print_req_5(control)
