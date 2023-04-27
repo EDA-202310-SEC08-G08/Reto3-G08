@@ -119,7 +119,6 @@ def print_req_5(control):
     """
         Función que imprime la solución del Requerimiento 5 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 5
     año = int(input("Ingrese el año entre 2015 y 2022 para el que quiere ver los accidentes recientes:"))
     mes = input("Ingrese el mes (en letras) para el que quiere ver los accidentes recientes:").upper()
     localidad = input("Ingrese la localidad de Bogotá para la que quiere ver los accidentes recientes:").upper()
@@ -325,7 +324,10 @@ if __name__ == "__main__":
                 print_req_3(control)
 
             elif int(inputs) == 5:
+                time1 = controller.get_time()
                 print_req_4(control)
+                time2 = controller.get_time()
+                print(f"Tiempo de ejecución: {controller.delta_time(time1, time2)} ms.")
 
             elif int(inputs) == 6:
                 print_req_5(control)
@@ -334,7 +336,10 @@ if __name__ == "__main__":
                 print_req_6(control)
 
             elif int(inputs) == 8:
+                time1 = controller.get_time()
                 print_req_7(control)
+                time2 = controller.get_time()
+                print(f"Tiempo de ejecución: {controller.delta_time(time1, time2)} ms.")
 
             elif int(inputs) == 9:
                 print_req_8(control)
