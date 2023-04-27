@@ -189,11 +189,11 @@ def print_req_7(control):
             print(controller.tablify(firstlast, columns))
             
             for accidente in om.get(accidentes, dia)['value']:
-                hora = dt.strptime(accidente["FECHA_HORA_ACC"], '%Y/%m/%d %H:%M:%S+%f').hour
+                hora = dt.strptime(accidente["HORA_OCURRENCIA_ACC"], '%H:%M:%S').hour
                 data[hora]+=1
                 
 
-    plt.hist(range(24), bins=range(24), weights=data, width=0.8)
+    plt.hist(range(24), bins=range(25), weights=data, width=0.8)
 
     plt.xticks(range(len(labels)), labels, rotation='vertical')
     plt.tight_layout()
