@@ -132,12 +132,18 @@ def req_6(control):
     pass
 
 
-def req_7(control):
+def req_7(año, mes, control):
     """
     Retorna el resultado del requerimiento 7
     """
     # TODO: Modificar el requerimiento 7
-    pass
+    return model.req_7(año, mes, control['model']['all_data'])
+
+def mes_letras(mes):
+    return model.mes_letras(mes)
+
+def tablify(lista, columns):
+    return model.tablify(lista, columns)
 
 
 def req_8(control):

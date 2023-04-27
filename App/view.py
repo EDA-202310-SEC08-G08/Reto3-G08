@@ -32,6 +32,9 @@ from DISClib.ADT import orderedmap as om
 assert cf
 from tabulate import tabulate
 import traceback
+import calendar
+import matplotlib.pyplot as plt
+from datetime import datetime as dt
 
 """
 La vista se encarga de la interacción con el usuario
@@ -145,7 +148,64 @@ def print_req_7(control):
         Función que imprime la solución del Requerimiento 7 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 7
-    pass
+    año = int(input("Ingrese el año entre 2015 y 2022 para el que quiere ver los accidentes recientes:"))
+    mes = int(input("Ingrese el mes (en números) para el que quiere ver los accidentes recientes:"))
+    dias = calendar.monthrange(año, mes)[1]
+    
+    accidentes = controller.req_7(año, mes, control)
+    
+    columns = ['CODIGO_ACCIDENTE',
+               'DIA_OCURRENCIA_ACC',
+               'DIRECCION',
+               'GRAVEDAD',
+               'CLASE_ACC',
+               'LOCALIDAD',
+               'FECHA_HORA_ACC',
+               'LATITUD',
+               'LONGITUD'
+               ]
+    
+    
+    print('\n####################################################################')
+    print(f'Accidentes más temprano y tardíos para el mes de {controller.mes_letras(mes)} de {año}.')
+    
+    data = [0]*24 
+    labels = ['']*24
+    for i in range(24):
+        data[i] = 0
+        labels[i] = str(i)+':00:00'
+    tot_acc = 0
+    
+    for dia in range(1, dias+1):
+        tot_acc += len(om.get(accidentes, dia)['value'])
+        if len(om.get(accidentes, dia)['value']) > 0:
+            print('\n')
+            print(f'Accidentes del día {año}/{mes}/{dia}:')
+            firstlast = lt.newList()
+            lt.addLast(firstlast, om.get(accidentes, dia)['value'][0])
+            lt.addLast(firstlast, om.get(accidentes, dia)['value'][-1])
+            print(controller.tablify(firstlast, columns))
+            
+            for accidente in om.get(accidentes, dia)['value']:
+                hora = dt.strptime(accidente["FECHA_HORA_ACC"], '%Y/%m/%d %H:%M:%S+%f').hour
+                data[hora]+=1
+                
+
+    plt.hist(range(24), bins=range(24), weights=data, width=0.8)
+
+    plt.xticks(range(len(labels)), labels, rotation='vertical')
+    plt.tight_layout()
+
+    plt.xlabel("Hora del dia")
+    plt.ylabel("Número de accidentes")
+    plt.title(f"Frequencia de {tot_acc} accidentes por hora del día \npara el mes de {controller.mes_letras(mes)} de {año}")
+
+    plt.legend()
+    plt.subplots_adjust(top=0.90)
+    plt.subplots_adjust(bottom=0.25)
+    plt.show()
+    
+    
 
 
 def print_req_8(control):

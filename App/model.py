@@ -42,6 +42,7 @@ from DISClib.Algorithms.Sorting import quicksort as quk
 assert cf
 from prettytable import PrettyTable as ptbl
 from datetime import datetime as dt
+import calendar
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá
@@ -186,7 +187,10 @@ def req_5_sort_criteria(data1, data2):
     if dt.strptime(data1["FECHA_HORA_ACC"], '%Y/%m/%d %H:%M:%S+%f') > dt.strptime(data2['FECHA_HORA_ACC'], '%Y/%m/%d %H:%M:%S+%f'):
         return True
     else:
-        return False         
+        return False    
+
+def req_7_sort_criteria(data1, data2): 
+    return not req_5_sort_criteria(data1, data2)
 
 
 def req_6(data_structs):
@@ -197,12 +201,50 @@ def req_6(data_structs):
     pass
 
 
-def req_7(data_structs):
+def req_7(año, mes, data_structs):
     """
     Función que soluciona el requerimiento 7
     """
     # TODO: Realizar el requerimiento 7
-    pass
+    acc = lt.newList()
+    dias = calendar.monthrange(año, mes)[1]
+    accs = om.newMap()
+    
+    for accidente in lt.iterator(om.valueSet(data_structs)):
+        if int(accidente['ANO_OCURRENCIA_ACC']) == año and accidente["MES_OCURRENCIA_ACC"] == mes_letras(mes):
+            lt.addLast(acc, accidente)
+            
+    merg.sort(acc, req_7_sort_criteria)
+    
+    for dia in range(1,dias+1):
+        aux = []
+        for accidente in lt.iterator(acc):
+            a, b, day = accidente['FECHA_OCURRENCIA_ACC'].split("/")
+            day = int(day)
+            if day == dia:
+                aux.append(accidente)
+        om.put(accs, dia, aux)
+        
+        
+    return accs
+            
+        
+            
+            
+def mes_letras(mes):
+    months = ['ENERO',
+              'FEBRERO',
+              'MARZO',
+              'AVRIL',
+              'MAYO',
+              'JUNIO',
+              'JULIO',
+              'AGOSTO',
+              'SEPTIEMBRE',
+              'OCTUBRE',
+              'NOVIEMBRE',
+              'DICIEMBRE']
+    return months[mes-1]
 
 
 def req_8(data_structs):
