@@ -103,7 +103,7 @@ def print_req_1(control, inicio, fin):
     inicio+=" 00:00:00 a"
     fin+=" 23:59:59 z"
     lst = ctrl.req_1(control, inicio, fin)
-    print(f"Hay {lt.size(lst)} registrados entre {ini} y {fi}")
+    print(f"Hay {lt.size(lst)} accidentes registrados entre {ini} y {fi}")
     lstTabulate = []
     headers=["CODIGO_ACCIDENTE", "DIA_OCURRENCIA_ACC", "DIRECCION", "GRAVEDAD", "CLASE_ACC","LOCALIDAD","FECHA_HORA_ACC", "LATITUD", "LONGITUD"]
     for sinis in lt.iterator(lst):
@@ -122,7 +122,7 @@ def print_req_2(control,inicio, fin, mes:str, anio):
     interv1=f"{anio}/{mes}/1 {inicio}:00 a"
     interv2=f"{anio}/{mes}/{ultimo_dia} {fin}:59 z"
     lst = ctrl.req_2(control, interv1, interv2, inicio, fin)
-    print(f"Hay {lt.size(lst)} accidentes")
+    print(f"Hay {lt.size(lst)} accidentes en el intervalo de horas dado {inicio}:00 a {fin}:00 en el año {anio} y en el mes {mes}.")
     lstTabulate = []
     headers=["CODIGO_ACCIDENTE", "HORA_OCURRENCIA_ACC","FECHA_OCURRENCIA_ACC", "DIA_OCURRENCIA_ACC","LOCALIDAD", "DIRECCION", "GRAVEDAD", "CLASE_ACC", "LATITUD", "LONGITUD"]
     for sinis in lt.iterator(lst):
@@ -146,7 +146,7 @@ def print_req_4(control, inicio, fin, gravedad):
     inicio+=" 00:00:00 a"
     fin+=" 23:59:59 z"
     lst = ctrl.req_4(control, inicio, fin, gravedad)
-    print(f"Hay {lt.size(lst)} registrados entre {ini} y {fi}")
+    print(f"Hay {lt.size(lst)} accidentes registrados entre las fechas {ini} 00:00:00 y {fi} 23:59:59")
     lstTabulate = []
     headers=["CODIGO_ACCIDENTE", "FECHA_HORA_ACC","DIA_OCURRENCIA_ACC", "LOCALIDAD","DIRECCION",  "CLASE_ACC","LATITUD", "LONGITUD"]
     for sinis in lt.iterator(lst):
@@ -173,7 +173,7 @@ def print_req_6(control, mes, anio, lat, long, rad, n_acc):
     interv1=f"{anio}/{mes}/1 00:00:00 a"
     interv2=f"{anio}/{mes}/{ultimo_dia} 23:59:59 z"
     lst = ctrl.req_6(control, interv1, interv2, float(lat), float(long), float(rad), int(n_acc))
-    print(f"Hay {lt.size(lst)} accidentes")
+    print(f"Los {lt.size(lst)} accidentes más cercanos al punto ({lat}, {long}) dentro de un radio de {rad} km para el mes de {mes} de {anio}.")
     lstTabulate = []
     headers=["CODIGO_ACCIDENTE", "DIA_OCURRENCIA_ACC", "DIRECCION", "GRAVEDAD","CLASE_ACC", "FECHA_HORA_ACC", "LATITUD", "LONGITUD"]
     for sinis in lt.iterator(lst):
@@ -196,11 +196,13 @@ def print_loader(control):
         lst_prim = []
         for siniestro in lt.iterator(primeros):
             lst_prim.append([siniestro[headers[j]] for j in range(len(headers))])
+        print("Los primeros tres registros de accidentes cargados fueron: ")
         print(tabulate(lst_prim, headers=headers, tablefmt='grid',  numalign="right", stralign="right"))
         ultimos = lt.subList(keys, lt.size(keys)-3, 3 )
         lst_ult = []
         for siniestro in lt.iterator(ultimos):
             lst_ult.append([siniestro[headers[j]] for j in range(len(headers))])
+        print("Los últimos tres registros de accidentes cargados fueron: ")
         print(tabulate(lst_ult, headers=headers, tablefmt='grid'))
 
 def print_req_7(control):
@@ -253,46 +255,54 @@ if __name__ == "__main__":
         inputs = input('Seleccione una opción para continuar\n')
         try:
             if int(inputs) == 1:
+                time1 = ctrl.get_time()
                 print("Cargando información de los archivos ....\n")
                 print_sizes()
                 t_archivo=input("Digite el tamaño deseado: ").replace(" ","")
                 size=select(t_archivo, ["small", "5pct","10pct","20pct", "30pct","50pct","80pct", "large"])
                 if size is None:
-                    print(" Por favor escoga un tamaño válido ")
+                    print("Por favor escoga un tamaño válido")
                 data = load_data(control, size)
                 print_loader(control)
+                time2 = ctrl.get_time()
+                print(f"Tiempo de ejecución: {ctrl.delta_time(time1, time2)} ms.")
             elif int(inputs) == 2:
                 time1 = ctrl.get_time() 
                 print("Ingrese los intervalos en el formato año/mes/dia")
-                inicio = input("Ingrse el intervalo de inicio: ").replace(" ", "")
+                inicio = input("Ingrese el intervalo de inicio: ").replace(" ", "")
                 fin = input("Ingrese el intervalo final: ").replace(" ","")
                 print_req_1(control, inicio, fin)
                 time2 = ctrl.get_time()
-                print(ctrl.delta_time(time1, time2))
-
+                print(f"Tiempo de ejecución: {ctrl.delta_time(time1, time2)} ms.")
             elif int(inputs) == 3:
+                time1 = ctrl.get_time()
                 print("Ingrese los intervalos en el formato hora:minuto")
-                inicio = input("Ingrse el intervalo de inicio: ").replace(" ", "")
+                inicio = input("Ingrese el intervalo de inicio: ").replace(" ", "")
                 fin = input("Ingrese el intervalo final: ").replace(" ","")
                 mes = input("Ingrese el mes deseado: ").replace(" ","")
                 anio = input("Ingrese el año deseado: ").replace(" ","")
                 print_req_2(control, inicio, fin, mes, anio)
-
+                time2 = ctrl.get_time()
+                print(f"Tiempo de ejecución: {ctrl.delta_time(time1, time2)} ms.")
             elif int(inputs) == 4:
                 print_req_3(control)
 
             elif int(inputs) == 5:
+                time1 = ctrl.get_time()
                 print("Ingrese los intervalos en el formato año/mes/dia")
-                inicio = input("Ingrse el intervalo de inicio: ").replace(" ", "")
+                inicio = input("Ingrese el intervalo de inicio: ").replace(" ", "")
                 fin = input("Ingrese el intervalo final: ").replace(" ","")
                 gravedad = input("Ingrese la gravedad del accidente: ").upper()
                 print_req_4(control, inicio, fin, gravedad)
+                time2 = ctrl.get_time()
+                print(f"Tiempo de ejecución: {ctrl.delta_time(time1, time2)} ms.")
 
             elif int(inputs) == 6:
                 print_req_5(control)
                 pass
 
             elif int(inputs) == 7:
+                time1 = ctrl.get_time()
                 mes = input("Ingrese el mes deseado: ").replace(" ","")
                 anio = input("Ingrese el año deseado: ").replace(" ","")
                 lat = input("Ingrese la latitud: ").replace(" ","")
@@ -300,7 +310,8 @@ if __name__ == "__main__":
                 rad = input("Ingrese el radio de area en km: ").replace(" ","")
                 n_acc = input("Ingrese el numero de accidentes que desea obtener: ").replace(" ","")
                 print_req_6(control, mes, anio, lat, long, rad, n_acc)
-
+                time2 = ctrl.get_time()
+                print(f"Tiempo de ejecución: {ctrl.delta_time(time1, time2)} ms.")
             elif int(inputs) == 8:
                 print_req_7(control)
 
