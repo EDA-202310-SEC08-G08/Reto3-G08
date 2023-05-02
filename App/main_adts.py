@@ -470,6 +470,13 @@ class List:
                 pos += 1
         return pos
 
+    def list_py(self):
+        py_list = []
+        for element in self:
+            py_list.append(element)
+
+        return py_list
+
 
 class Stack:
     def __init__(self, datastructure="DOUBLE_LINKED") -> object:
@@ -561,7 +568,7 @@ class Stack:
         """
         return st.top(self.stack)
 
-    def size(self) -> int|None:
+    def size(self) -> int | None:
         """
         Returns the number of elements in the stack.
 

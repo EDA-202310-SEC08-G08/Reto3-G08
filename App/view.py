@@ -20,6 +20,12 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from datetime import datetime as dt
+import matplotlib.pyplot as plt
+import tabulate as tb
+import calendar
+import traceback
+from tabulate import tabulate
 import config as cf
 import sys
 import controller
@@ -30,11 +36,6 @@ from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.ADT import orderedmap as om
 assert cf
-from tabulate import tabulate
-import traceback
-import calendar
-import matplotlib.pyplot as plt
-from datetime import datetime as dt
 
 """
 La vista se encarga de la interacción con el usuario
@@ -48,7 +49,7 @@ def new_controller():
     """
         Se crea una instancia del controlador
     """
-    #TODO: Llamar la función del controlador donde se crean las estructuras de datos
+    # TODO: Llamar la función del controlador donde se crean las estructuras de datos
     control = controller.new_controller()
     return control
 
@@ -71,8 +72,9 @@ def load_data(control, suffix):
     """
     Carga los datos
     """
-    #TODO: Realizar la carga de datos
-    data, firstlast = controller.load_data(control, f"siniestros/datos_siniestralidad{suffix}")
+    # TODO: Realizar la carga de datos
+    data, firstlast = controller.load_data(
+        control, f"siniestros/datos_siniestralidad{suffix}")
     return data, firstlast
 
 
@@ -80,8 +82,9 @@ def print_data(control, id):
     """
         Función que imprime un dato dado su ID
     """
-    #TODO: Realizar la función para imprimir un elemento
+    # TODO: Realizar la función para imprimir un elemento
     pass
+
 
 def print_req_1(control):
     """
@@ -99,12 +102,30 @@ def print_req_2(control):
     pass
 
 
-def print_req_3(control):
+def print_req_3(control, avenida, clase):
     """
         Función que imprime la solución del Requerimiento 3 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 3
-    pass
+
+    ans_list, numelem = controller.req_3(control, avenida, clase)
+
+    columns = ["codigo_accidente",
+               "fecha_hora",
+               "dia_ocurrencia",
+               "localidad",
+               "direccion",
+               "gravedad",
+               "clase",
+               "latitud",
+               "longitud",]
+
+    table = table_list_object(ans_list, columns)
+
+    print(f"{'='*10} Requerimiento 3 {('='*10)}")
+    print(f"Hay {numelem} accidentes en la avenida {avenida} de clase {clase}.")
+    print(f"{'='*10} Requerimiento 3 Respuesta {('='*10)}")
+    print(table)
 
 
 def print_req_4(control):
@@ -120,10 +141,13 @@ def print_req_5(control):
         Función que imprime la solución del Requerimiento 5 en consola
     """
     time1 = controller.get_time()
-    año = int(input("Ingrese el año entre 2015 y 2022 para el que quiere ver los accidentes recientes:"))
-    mes = input("Ingrese el mes (en letras) para el que quiere ver los accidentes recientes:").upper()
-    localidad = input("Ingrese la localidad de Bogotá para la que quiere ver los accidentes recientes:").upper()
-    
+    año = int(input(
+        "Ingrese el año entre 2015 y 2022 para el que quiere ver los accidentes recientes:"))
+    mes = input(
+        "Ingrese el mes (en letras) para el que quiere ver los accidentes recientes:").upper()
+    localidad = input(
+        "Ingrese la localidad de Bogotá para la que quiere ver los accidentes recientes:").upper()
+
     top10tabla, size = controller.req_5(año, mes, localidad, control)
     tam = size
     if size > 10:
@@ -131,7 +155,7 @@ def print_req_5(control):
     print('\n####################################################################')
     print(f'Hay {size} accidentes ocurridos en la localidad de {localidad} en el mes de {mes} del año {año}.')
     print(f'Estos son los {tam} accidentes menos recientes:')
-    
+
     print(top10tabla)
     time2 = controller.get_time()
     print(f"Tiempo de ejecución: {controller.delta_time(time1, time2)} ms.")
@@ -150,12 +174,14 @@ def print_req_7(control):
         Función que imprime la solución del Requerimiento 7 en consola
     """
     time1 = controller.get_time()
-    año = int(input("Ingrese el año entre 2015 y 2022 para el que quiere ver los accidentes recientes:"))
-    mes = int(input("Ingrese el mes (en números) para el que quiere ver los accidentes recientes:"))
+    año = int(input(
+        "Ingrese el año entre 2015 y 2022 para el que quiere ver los accidentes recientes:"))
+    mes = int(input(
+        "Ingrese el mes (en números) para el que quiere ver los accidentes recientes:"))
     dias = calendar.monthrange(año, mes)[1]
-    
+
     accidentes = controller.req_7(año, mes, control)
-    
+
     columns = ['CODIGO_ACCIDENTE',
                'DIA_OCURRENCIA_ACC',
                'DIRECCION',
@@ -166,18 +192,18 @@ def print_req_7(control):
                'LATITUD',
                'LONGITUD'
                ]
-    
-    
+
     print('\n####################################################################')
-    print(f'Accidentes más temprano y tardíos para el mes de {controller.mes_letras(mes)} de {año}.')
-    
-    data = [0]*24 
+    print(
+        f'Accidentes más temprano y tardíos para el mes de {controller.mes_letras(mes)} de {año}.')
+
+    data = [0]*24
     labels = ['']*24
     for i in range(24):
         data[i] = 0
         labels[i] = str(i)+':00:00'
     tot_acc = 0
-    
+
     for dia in range(1, dias+1):
         tot_acc += len(om.get(accidentes, dia)['value'])
         if len(om.get(accidentes, dia)['value']) > 0:
@@ -187,11 +213,11 @@ def print_req_7(control):
             lt.addLast(firstlast, om.get(accidentes, dia)['value'][0])
             lt.addLast(firstlast, om.get(accidentes, dia)['value'][-1])
             print(controller.tablify(firstlast, columns))
-            
+
             for accidente in om.get(accidentes, dia)['value']:
-                hora = dt.strptime(accidente["HORA_OCURRENCIA_ACC"], '%H:%M:%S').hour
-                data[hora]+=1
-                
+                hora = dt.strptime(
+                    accidente["HORA_OCURRENCIA_ACC"], '%H:%M:%S').hour
+                data[hora] += 1
 
     plt.hist(range(24), bins=range(25), weights=data, width=0.8)
 
@@ -200,7 +226,8 @@ def print_req_7(control):
 
     plt.xlabel("Hora del dia")
     plt.ylabel("Número de accidentes")
-    plt.title(f"Frequencia de {tot_acc} accidentes por hora del día \npara el mes de {controller.mes_letras(mes)} de {año}")
+    plt.title(
+        f"Frequencia de {tot_acc} accidentes por hora del día \npara el mes de {controller.mes_letras(mes)} de {año}")
 
     plt.legend()
     plt.subplots_adjust(top=0.90)
@@ -208,8 +235,6 @@ def print_req_7(control):
     plt.show()
     time2 = controller.get_time()
     print(f"Tiempo de ejecución: {controller.delta_time(time1, time2)} ms.")
-    
-    
 
 
 def print_req_8(control):
@@ -218,6 +243,24 @@ def print_req_8(control):
     """
     # TODO: Imprimir el resultado del requerimiento 8
     pass
+
+
+def table_list_object(list, columns):
+
+    data_real = []
+
+    for data in list:
+        data_item = []
+        for column in columns:
+            attr = getattr(data, column)
+            data_item.append(attr)
+        data_real.append(data_item)
+
+    table = tb.tabulate(tabular_data=data_real,
+                        headers=columns, tablefmt='fancy_grid')
+
+    return table
+
 
 def printchooseCSV():
     print('\nIngrese la representación de los datos que quiere usar: ')
@@ -229,6 +272,7 @@ def printchooseCSV():
     print(' 6. -50pct')
     print(' 7. -80pct')
     print(' 8. -large')
+
 
 def fileChoose():
     """
@@ -296,7 +340,7 @@ if __name__ == "__main__":
     Menu principal
     """
     working = True
-    #ciclo del menu
+    # ciclo del menu
     while working:
         print_menu()
         inputs = input('Seleccione una opción para continuar\n')
@@ -306,14 +350,18 @@ if __name__ == "__main__":
                 suffix = fileChoose()
                 print("Cargando información de los archivos ....\n")
                 data, firstlast = load_data(control, suffix)
-                tableFirst3, tableLast3 = controller.visual_charge_data(firstlast)
-                
+                tableFirst3, tableLast3 = controller.visual_charge_data(
+                    firstlast)
+
                 print("---------------------------------------------------------------")
                 print("Información de los accidentes cargados:")
-                print(f"Total de accidentes: {om.size(control['model']['all_data'])}")
-                print(f"Total de columnas cargadas: {len(control['model']['all_data']['root']['value'])}")
-                print("---------------------------------------------------------------\n")
-                
+                print(
+                    f"Total de accidentes: {om.size(control['model']['all_data'])}")
+                print(
+                    f"Total de columnas cargadas: {len(control['model']['all_data']['root']['value'])}")
+                print(
+                    "---------------------------------------------------------------\n")
+
                 print("Los primeros tres registros de accidentes cargados:")
                 print(tableFirst3)
                 print("\n")
@@ -326,7 +374,11 @@ if __name__ == "__main__":
                 print_req_2(control)
 
             elif int(inputs) == 4:
-                print_req_3(control)
+
+                avenida = input("Ingrese el nombre de la avenida: ")
+                clase = input("Ingrese la clase del accidente: ")
+
+                print_req_3(control, avenida, clase)
 
             elif int(inputs) == 5:
                 print_req_4(control)
@@ -341,7 +393,8 @@ if __name__ == "__main__":
                 time1 = controller.get_time()
                 print_req_7(control)
                 time2 = controller.get_time()
-                print(f"Tiempo de ejecución: {controller.delta_time(time1, time2)} ms.")
+                print(
+                    f"Tiempo de ejecución: {controller.delta_time(time1, time2)} ms.")
 
             elif int(inputs) == 9:
                 print_req_8(control)
@@ -349,7 +402,7 @@ if __name__ == "__main__":
             elif int(inputs) == 0:
                 working = False
                 print("\nGracias por utilizar el programa")
-                
+
             else:
                 print("Opción errónea, vuelva a elegir.\n")
         except Exception as exp:

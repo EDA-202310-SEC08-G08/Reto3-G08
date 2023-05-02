@@ -75,6 +75,17 @@ class Accident():
         self.longitud = data["LONGITUD"]
 
 
+class GroupClass():
+
+    def __init__(self, clase):
+        self.clase = clase
+        self.accidents = 0
+        self.all_data = adt.List(
+            datastructure='ARRAY_LIST', cmpfunction=compareDates)
+        self.map_accidents = adt.OrderedMap(
+            omaptype='RBT', comparefunction=compareDates)
+
+
 class Day():
 
     def __init__(self, day):
@@ -97,8 +108,8 @@ def new_data_structs():
     }
 
     data_structs["all_data"] = om.newMap(comparefunction=cmp_by_id)
-    data_structs["map_accidents"] = adt.OrderedMap(
-        omaptype='RBT', comparefunction=compareDates)  # type: ignore
+    data_structs["map_accidents"] = adt.HashMap(
+        maptype="PROBING", loadfactor=0.5, cmpfunction=cmp_by_class, numelements=7)  # type: ignore
 
     return data_structs
 
@@ -135,21 +146,41 @@ def addAccident(data_structs, data):
     """
     accident = Accident(data)
     map_accidents = data_structs["map_accidents"]
-    if map_accidents.contains(accident.fecha_ocurrencia):
-        day = map_accidents.get(accident.fecha_ocurrencia)
-        day = me.getValue(day)
-        day.map_accidents.put(accident.hora_ocurrencia, accident)
-        day.accidents += 1
+    if map_accidents.contains(accident.clase):
+        group = map_accidents.get(accident.clase)
+        group = me.getValue(group)
+        group.accidents += 1
+        group.all_data.addLast(accident)
+        addDay(group, accident)
     else:
-        day = Day(accident.fecha_ocurrencia)
-        day.map_accidents.put(accident.hora_ocurrencia, accident)
-        day.accidents += 1
-        map_accidents.put(accident.fecha_ocurrencia, day)
+        group = GroupClass(accident.clase)
+        group.accidents += 1
+        addDay(group, accident)
+        map_accidents.put(accident.clase, group)
 
     return data_structs
 
 
+def addDay(group: GroupClass, data: Accident):
+    """
+    Función para agregar nuevos elementos a la lista
+    """
+
+    if group.map_accidents.contains(data.fecha_ocurrencia):
+        day = group.map_accidents.get(data.fecha_ocurrencia)
+        day = me.getValue(day)
+        day.accidents += 1
+        day.map_accidents.put(data.hora_ocurrencia, data)
+    else:
+        day = Day(data.fecha_ocurrencia)
+        day.accidents += 1
+        day.map_accidents.put(data.hora_ocurrencia, data)
+        group.map_accidents.put(data.fecha_ocurrencia, day)
+
+    return group
+
 # Funciones para creacion de datos
+
 
 def new_data(info):
     """
@@ -192,12 +223,29 @@ def req_2(data_structs):
     pass
 
 
-def req_3(data_structs):
+def req_3(data_structs, calle, clase_accidente):
     """
     Función que soluciona el requerimiento 3
     """
     # TODO: Realizar el requerimiento 3
-    pass
+
+    heap_solution = mpq.newMinPQ(cmpfunction=compareDatesHeap)
+    list_solution = adt.List(datastructure='ARRAY_LIST',
+                             cmpfunction=compareDatesHeap)
+    map_class = data_structs["map_accidents"]
+    iterable_data = map_class.get(clase_accidente)
+    iterable_data = me.getValue(iterable_data)
+    iterable_data = iterable_data.all_data
+
+    for accident in iterable_data:
+        if calle in accident.direccion:
+            mpq.insert(heap_solution, accident)
+    numelements = mpq.size(heap_solution)
+    for i in range(3):
+        accident = mpq.delMin(heap_solution)
+        list_solution.addLast(accident)
+
+    return list_solution, numelements
 
 
 def req_4(data_structs):
@@ -322,6 +370,11 @@ def compareDates(date1, date2):
         return 1
     else:
         return -1
+
+
+def compareDatesHeap(acc1: Accident, acc2: Accident):
+
+    return acc1.fecha_hora < acc2.fecha_hora
 
 
 def cmp_by_class(class1, class2):

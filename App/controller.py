@@ -35,15 +35,12 @@ def new_controller():
     """
     Crea una instancia del modelo
     """
-    #TODO: Llamar la función del modelo que crea las estructuras de datos
+    # TODO: Llamar la función del modelo que crea las estructuras de datos
     control = {
         "model": None
     }
     control["model"] = model.new_data_structs()
     return control
-    
-
-
 
 
 # Funciones para la carga de datos
@@ -64,14 +61,13 @@ def load_data(control, filename):
     return control["model"], firstlast
 
 
-
 # Funciones de ordenamiento
 
 def sort(control):
     """
     Ordena los datos del modelo
     """
-    #TODO: Llamar la función del modelo para ordenar los datos
+    # TODO: Llamar la función del modelo para ordenar los datos
     pass
 
 
@@ -81,7 +77,7 @@ def get_data(control, id):
     """
     Retorna un dato por su ID.
     """
-    #TODO: Llamar la función del modelo para obtener un dato
+    # TODO: Llamar la función del modelo para obtener un dato
     pass
 
 
@@ -101,12 +97,12 @@ def req_2(control):
     pass
 
 
-def req_3(control):
+def req_3(control, avenida, clase):
     """
     Retorna el resultado del requerimiento 3
     """
     # TODO: Modificar el requerimiento 3
-    pass
+    return model.req_3(control['model'], avenida, clase)
 
 
 def req_4(control):
@@ -124,6 +120,7 @@ def req_5(año, mes, localidad, control):
     # TODO: Modificar el requerimiento 5
     return model.req_5(año, mes, localidad, control['model']['all_data'])
 
+
 def req_6(control):
     """
     Retorna el resultado del requerimiento 6
@@ -139,8 +136,10 @@ def req_7(año, mes, control):
     # TODO: Modificar el requerimiento 7
     return model.req_7(año, mes, control['model']['all_data'])
 
+
 def mes_letras(mes):
     return model.mes_letras(mes)
+
 
 def tablify(lista, columns):
     return model.tablify(lista, columns)
@@ -169,6 +168,7 @@ def delta_time(start, end):
     """
     elapsed = float(end - start)
     return elapsed
+
 
 def get_memory():
     """
