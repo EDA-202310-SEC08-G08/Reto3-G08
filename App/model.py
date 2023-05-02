@@ -69,7 +69,8 @@ class Accident():
         self.gravedad = data["GRAVEDAD"]
         self.clase = data["CLASE_ACC"]
         self.localidad = data["LOCALIDAD"]
-        self.fecha_hora = dt.strptime(data["FECHA_HORA"], '%Y/%m/%d %H:%M:%S')
+        self.fecha_hora = dt.strptime(
+            data["FECHA_HORA_ACC"][:-3], '%Y/%m/%d %H:%M:%S')
         self.latitud = data["LATITUD"]
         self.longitud = data["LONGITUD"]
 
@@ -134,9 +135,9 @@ def addAccident(data_structs, data):
     """
     accident = Accident(data)
     map_accidents = data_structs["map_accidents"]
-    map_accidents = adt.OrderedMap()
     if map_accidents.contains(accident.fecha_ocurrencia):
         day = map_accidents.get(accident.fecha_ocurrencia)
+        day = me.getValue(day)
         day.map_accidents.put(accident.hora_ocurrencia, accident)
         day.accidents += 1
     else:
